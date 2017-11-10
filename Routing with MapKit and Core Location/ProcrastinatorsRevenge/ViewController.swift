@@ -36,17 +36,20 @@ class ViewController: UIViewController {
   
   let locationManager = CLLocationManager()
     
+  var locationTuples: [(textField: UITextField?, mapItem: MKMapItem?)]!
   override func viewDidLoad() {
     super.viewDidLoad()
+    locationTuples = [(sourceField, nil), (destinationField1, nil), (destinationField2, nil)]
+    
     originalTopMargin = topMarginConstraint.constant
     
     locationManager.delegate = self
     locationManager.requestWhenInUseAuthorization()
     
-//    if CLLocationManager.locationServicesEnabled() {
-//        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-//        locationManager.requestLocation()
-//    }
+    if CLLocationManager.locationServicesEnabled() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.requestLocation()
+    }
   }
   
     override func viewWillAppear(_ animated: Bool) {
@@ -61,11 +64,29 @@ class ViewController: UIViewController {
     
   @IBAction func addressEntered(sender: UIButton) {
     view.endEditing(true)
+    
+    let currentTextField = locationTuples[sender.tag-1].textField
+    
+    CLGeocoder().geocodeAddressString((currentTextField?.text!)!, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
+        if let placemarks = placemarks {
+            
+        } else {
+            
+        }
+    })
   }
 
   @IBAction func swapFields(sender: AnyObject) {
     
   }
+    
+    func formatAddressFromPlacemark(placemark: CLPlacemark) -> String {
+        return (placemark.addressDictionary!["FormattedAddressLines"] as! [String]).joined(separator: ", ")
+    }
+    
+//    func showAddressTable(addresses: [String]) {
+//        let addressTableView
+//    }
   
   func showAlert(alertString: String) {
     let alert = UIAlertController(title: nil, message: alertString, preferredStyle: .alert)
@@ -129,12 +150,19 @@ extension ViewController: CLLocationManagerDelegate {
     if locations.first != nil {
         print("location:: (location)")
     }
-  }
-    
-  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            locationManager.requestLocation()
-        }
+        
+        CLGeocoder().reverseGeocodeLocation(locations.last!, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
+            if let placemarks = placemarks {
+                let placemark = placemarks[0]
+                
+                self.locationTuples[0].mapItem = MKMapItem(placemark: MKPlacemark(coordinate: placemark.location!.coordinate, addressDictionary: placemark.addressDictionary as! [String:AnyObject]?))
+                
+                self.sourceField.text = self.formatAddressFromPlacemark(placemark: placemark)
+                
+                self.enterButtonArray.filter{$0.tag == 1}.first!.isSelected = true
+            }
+            
+        })
   }
   
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
