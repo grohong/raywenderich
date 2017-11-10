@@ -34,9 +34,19 @@ class ViewController: UIViewController {
   
   var originalTopMargin: CGFloat!
   
+  let locationManager = CLLocationManager()
+    
   override func viewDidLoad() {
     super.viewDidLoad()
     originalTopMargin = topMarginConstraint.constant
+    
+    locationManager.delegate = self
+    locationManager.requestWhenInUseAuthorization()
+    
+//    if CLLocationManager.locationServicesEnabled() {
+//        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+//        locationManager.requestLocation()
+//    }
   }
   
     override func viewWillAppear(_ animated: Bool) {
@@ -114,11 +124,19 @@ extension ViewController: UITextFieldDelegate {
 
 extension ViewController: CLLocationManagerDelegate {
   
-  func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    if locations.first != nil {
+        print("location:: (location)")
+    }
+  }
+    
+  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            locationManager.requestLocation()
+        }
   }
   
-  func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
     print(error)
   }
 }
