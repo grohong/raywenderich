@@ -33,7 +33,7 @@ class AddressTableView: UITableView {
   
   override init(frame: CGRect, style: UITableViewStyle) {
     super.init(frame: frame, style: style)
-    self.registerClass(UITableViewCell.self, forCellReuseIdentifier: "AddressCell")
+    self.register(UITableViewCell.self, forCellReuseIdentifier: "AddressCell")
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -43,7 +43,7 @@ class AddressTableView: UITableView {
 
 extension AddressTableView: UITableViewDelegate {
 
-  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
     return 50
   }
   
@@ -54,14 +54,14 @@ extension AddressTableView: UITableViewDelegate {
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     let label = UILabel()
     label.font = UIFont(name: "HoeflerText-Black", size: 18)
-    label.textAlignment = .Center
+    label.textAlignment = .center
     label.text = "Did you mean..."
     label.backgroundColor = UIColor(red: 240.0/255.0, green: 229.0/255.0, blue: 141.0/225.0, alpha: 1)
     
     return label
   }
   
-  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
     removeFromSuperview()
   }
 }
@@ -72,21 +72,21 @@ extension AddressTableView: UITableViewDataSource {
     return 1
   }
   
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return addresses.count + 1
   }
   
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    let cell = tableView.dequeueReusableCellWithIdentifier("AddressCell") as UITableViewCell!
-    cell.textLabel?.numberOfLines = 3
-    cell.textLabel?.font = UIFont(name: "HoeflerText-Regular", size: 11)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "AddressCell") as UITableViewCell!
+        cell?.textLabel?.numberOfLines = 3
+        cell?.textLabel?.font = UIFont(name: "HoeflerText-Regular", size: 11)
     
     if addresses.count > indexPath.row {
-      cell.textLabel?.text = addresses[indexPath.row]
+        cell?.textLabel?.text = addresses[indexPath.row]
     } else {
-      cell.textLabel?.text = "None of the above"
+        cell?.textLabel?.text = "None of the above"
     }
-    return cell
+        return cell!
   }
 }

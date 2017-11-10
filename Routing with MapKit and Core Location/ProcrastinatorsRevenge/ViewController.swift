@@ -39,13 +39,13 @@ class ViewController: UIViewController {
     originalTopMargin = topMarginConstraint.constant
   }
   
-  override func viewWillAppear(animated: Bool) {
-    navigationController?.navigationBarHidden = true
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
   }
   
   @IBAction func getDirections(sender: AnyObject) {
     view.endEditing(true)
-    performSegueWithIdentifier("show_directions", sender: self)
+    performSegue(withIdentifier: "show_directions", sender: self)
   }
 
   @IBAction func addressEntered(sender: UIButton) {
@@ -57,12 +57,12 @@ class ViewController: UIViewController {
   }
   
   func showAlert(alertString: String) {
-    let alert = UIAlertController(title: nil, message: alertString, preferredStyle: .Alert)
+    let alert = UIAlertController(title: nil, message: alertString, preferredStyle: .alert)
     let okButton = UIAlertAction(title: "OK",
-      style: .Cancel) { (alert) -> Void in
+                                 style: .cancel) { (alert) -> Void in
     }
     alert.addAction(okButton)
-    presentViewController(alert, animated: true, completion: nil)
+    present(alert, animated: true, completion: nil)
   }
   
   // The remaining methods handle the keyboard resignation/
@@ -74,7 +74,7 @@ class ViewController: UIViewController {
     }
     
     topMarginConstraint.constant -= 165
-    UIView.animateWithDuration(0.3, animations: { () -> Void in
+    UIView.animate(withDuration: 0.3, animations: { () -> Void in
       self.view.layoutIfNeeded()
     })
   }
@@ -85,7 +85,7 @@ class ViewController: UIViewController {
     }
     
     topMarginConstraint.constant = originalTopMargin
-    UIView.animateWithDuration(0.3, animations: { () -> Void in
+    UIView.animate(withDuration: 0.3, animations: { () -> Void in
       self.view.layoutIfNeeded()
     })
   }

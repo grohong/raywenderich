@@ -31,7 +31,7 @@ class DirectionsViewController: UIViewController {
   @IBOutlet weak var directionsTableView: DirectionsTableView!
   
   var activityIndicator: UIActivityIndicatorView?
-  var locationArray: [(textField: UITextField!, mapItem: MKMapItem?)]!
+    var locationArray: [(textField: UITextField?, mapItem: MKMapItem?)]!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -39,8 +39,8 @@ class DirectionsViewController: UIViewController {
   }
 
   func addActivityIndicator() {
-    activityIndicator = UIActivityIndicatorView(frame: UIScreen.mainScreen().bounds)
-    activityIndicator?.activityIndicatorViewStyle = .WhiteLarge
+    activityIndicator = UIActivityIndicatorView(frame: UIScreen.main.bounds)
+    activityIndicator?.activityIndicatorViewStyle = .whiteLarge
     activityIndicator?.backgroundColor = view.backgroundColor
     activityIndicator?.startAnimating()
     view.addSubview(activityIndicator!)
@@ -53,8 +53,8 @@ class DirectionsViewController: UIViewController {
     }
   }
   
-  override func viewWillAppear(animated: Bool) {
-    navigationController?.navigationBarHidden = false
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = false
     automaticallyAdjustsScrollViewInsets = false
   }
 }
@@ -65,7 +65,7 @@ extension DirectionsViewController: MKMapViewDelegate {
     
     let polylineRenderer = MKPolylineRenderer(overlay: overlay)
     if (overlay is MKPolyline) {
-      polylineRenderer.strokeColor = UIColor.blueColor().colorWithAlphaComponent(0.75)
+      polylineRenderer.strokeColor = UIColor.blue.withAlphaComponent(0.75)
       polylineRenderer.lineWidth = 5
     }
     return polylineRenderer
