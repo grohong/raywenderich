@@ -67,3 +67,37 @@ override func viewDidLoad() {
 
 **CLPlacemark**
 - 장소 이름, 주소 및 기타 관련 정보를 포함하는 지리적 좌표에 대한 사용자 친화적 인 설명입니다.
+
+```CLGeocoder().reverseGeocodeLocation``` 을 이용하여 ```CLLocationManager```를 통해 가저온 location(여러개를 가지고 올수 있지만 제일 마지막에 가지고온 location)을 이용하여 현재 장소를 가지고 온다.
+<br>
+
+viewDidLoad를 위에 location정보를 넣을 튜블 리스트를 만든다.
+```swift
+  var locationTuples: [(textField: UITextField!, mapItem: MKMapItem?)]!
+```
+<br>
+
+viewDidLoad에서 해당 튜블의 textField를 정의하고 초기화 시킨다.
+```swift
+  locationTuples = [(sourceField, nil), (destinationField1, nil), (destinationField2, nil)]
+```
+<br>
+
+placemark에서 주소 정보로 전환해주는 간단한 함수를 하나 만들어 둔다
+```swift
+func formatAddressFromPlacemark(placemark: CLPlacemark) -> String {
+        return (placemark.addressDictionary!["FormattedAddressLines"] as! [String]).joined(separator: ", ")
+    }
+```
+<br>
+
+```completionHandler``` 안에서 가지고온 위치정보를 textField에 넣는다.
+```swift
+  self.sourceField.text = self.formatAddressFromPlacemark(placemark: placemark)
+```
+<br>
+
+textField옆에 정보가 들어갔다는 표시를 해둔다.
+```swift
+  self.enterButtonArray.filter{$0.tag == 1}.first!.isSelected = true
+```
