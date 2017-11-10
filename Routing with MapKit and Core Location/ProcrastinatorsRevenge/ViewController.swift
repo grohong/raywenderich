@@ -53,11 +53,12 @@ class ViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
   }
   
-  @IBAction func getDirections(sender: AnyObject) {
-    view.endEditing(true)
-    performSegue(withIdentifier: "show_directions", sender: self)
-  }
-
+    @IBAction func getDirections(_ sender: Any) {
+        view.endEditing(true)
+        performSegue(withIdentifier: "show_directions", sender: self)
+    }
+    
+    
   @IBAction func addressEntered(sender: UIButton) {
     view.endEditing(true)
   }
