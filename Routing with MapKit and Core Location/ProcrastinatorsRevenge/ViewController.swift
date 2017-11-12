@@ -84,9 +84,13 @@ class ViewController: UIViewController {
         return (placemark.addressDictionary!["FormattedAddressLines"] as! [String]).joined(separator: ", ")
     }
     
-//    func showAddressTable(addresses: [String]) {
-//        let addressTableView
-//    }
+    func showAddressTable(addresses: [String]) {
+        let addressTableView = AddressTableView(frame: UIScreen.accessibilityFrame(), style: UITableViewStyle.plain)
+        addressTableView.addresses = addresses
+        addressTableView.delegate = addressTableView
+        addressTableView.dataSource = addressTableView
+        view.addSubview(addressTableView)
+    }
   
   func showAlert(alertString: String) {
     let alert = UIAlertController(title: nil, message: alertString, preferredStyle: .alert)
