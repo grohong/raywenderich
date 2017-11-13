@@ -69,9 +69,13 @@ class ViewController: UIViewController {
     
     CLGeocoder().geocodeAddressString((currentTextField?.text!)!, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
         if let placemarks = placemarks {
-            
+            var addresses = [String]()
+            for placemark in placemarks {
+                addresses.append(self.formatAddressFromPlacemark(placemark: placemark))
+            }
+            self.showAddressTable(addresses: addresses, textField: currentTextField!, placemarks: placemarks, sender: sender)
         } else {
-            
+            self.showAlert(alertString: "Address not found.")
         }
     })
   }
@@ -84,9 +88,13 @@ class ViewController: UIViewController {
         return (placemark.addressDictionary!["FormattedAddressLines"] as! [String]).joined(separator: ", ")
     }
     
-    func showAddressTable(addresses: [String]) {
-        let addressTableView = AddressTableView(frame: UIScreen.accessibilityFrame(), style: UITableViewStyle.plain)
+    func showAddressTable(addresses: [String], textField: UITextField, placemarks: [CLPlacemark], sender: UIButton) {
+        let addressTableView = AddressTableView(frame: UIScreen.main.bounds, style: UITableViewStyle.plain)
         addressTableView.addresses = addresses
+        addressTableView.currentTextField = textField
+        addressTableView.placemarkArray = placemarks
+        addressTableView.mainViewController = self
+        addressTableView.sender = sender
         addressTableView.delegate = addressTableView
         addressTableView.dataSource = addressTableView
         view.addSubview(addressTableView)
@@ -128,7 +136,7 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: UITextFieldDelegate {
-  
+    
   func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
     return true
   }

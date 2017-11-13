@@ -34,6 +34,7 @@
 		045307441B4461340033613E /* DirectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsViewController.swift; sourceTree = "<group>"; };
 		045307481B446C040033613E /* AddressTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressTableView.swift; sourceTree = "<group>"; };
 		046EAFCE1B48557500D431FF /* DirectionsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsTableView.swift; sourceTree = "<group>"; };
+		4E2E74901FB8894900B06D4F /* SimulLocation.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SimulLocation.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				0453071B1B4460370033613E /* Info.plist */,
+				4E2E74901FB8894900B06D4F /* SimulLocation.gpx */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

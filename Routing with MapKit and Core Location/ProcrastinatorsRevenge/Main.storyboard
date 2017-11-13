@@ -87,7 +87,7 @@
                                 </state>
                                 <state key="selected" title="✓"/>
                                 <connections>
-                                    <action selector="addressEntered:" destination="a3c-fS-Ewu" eventType="touchUpInside" id="fyf-CG-0eK"/>
+                                    <action selector="addressEnteredWithSender:" destination="a3c-fS-Ewu" eventType="touchUpInside" id="Qvf-5G-yyQ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H54-8W-llh">
@@ -103,7 +103,7 @@
                                 <state key="selected" title="✓"/>
                                 <state key="highlighted" title="✓"/>
                                 <connections>
-                                    <action selector="addressEntered:" destination="a3c-fS-Ewu" eventType="touchUpInside" id="rST-pK-Xz1"/>
+                                    <action selector="addressEnteredWithSender:" destination="a3c-fS-Ewu" eventType="touchUpInside" id="ndV-ls-DTC"/>
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EZN-p1-pvm">
@@ -251,10 +251,10 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DirectionCell" id="4c1-Nu-cbB">
-                                        <rect key="frame" x="0.0" y="56" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4c1-Nu-cbB" id="ZFd-VJ-7FZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
