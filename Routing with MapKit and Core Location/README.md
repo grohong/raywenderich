@@ -47,7 +47,7 @@ override func viewDidLoad() {
   그럼 이런식으로 해당웹의 위치 접근 여부를 물어봅니다.
 
 <br>
-### CoreLocation을 사용하여 사용자 항목 처리
+
 
 **CLLocationManagerDelegate** 의 <br>
 **locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]** 함수(장소가 없데이트 됐을때) 코드를 추가합니다.
@@ -101,3 +101,132 @@ textField옆에 정보가 들어갔다는 표시를 해둔다.
 ```swift
   self.enterButtonArray.filter{$0.tag == 1}.first!.isSelected = true
 ```
+<br>
+
+
+### CoreLocation을 사용하여 사용자 항목 처리
+
+#### 텍스트 필드값에 쓴 장소 찾기
+```swift
+@IBAction func addressEntered(sender: UIButton) {
+ view.endEditing(true)
+ // 1
+ let currentTextField = locationTuples[sender.tag-1].textField
+ // 2
+ CLGeocoder().geocodeAddressString((currentTextField?.text!)!, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
+     if let placemarks = placemarks {
+
+     } else {
+
+     }
+ })
+}
+```
+**geocodeAddressString**
+- 지리 좌표와 장소 명을 변환하기위한 인터페이스입니다.
+
+
+
+1. mainView의 textField중 button이 눌린 옆에 textField를 가지고 온다.
+2. CLGeocoder의 geocodeAddressString를 이용하여 찾을려는 정보를 가지고와서 completionHandler를 이용해 처리한다. (유사장소가 있을때와 없을때)
+<br>
+
+#### 유사장소를 tableView로 나타내기
+
+```swift
+func showAddressTable(addresses: [String]) {
+        let addressTableView = AddressTableView(frame: UIScreen.main.bounds, style: UITableViewStyle.plain)
+        addressTableView.addresses = addresses
+        addressTableView.delegate = addressTableView
+        addressTableView.dataSource = addressTableView
+        view.addSubview(addressTableView)
+    }
+```
+
+- viewController에 table를 보여줄 함수를 구현합니다.
+  - addressTableView 클래스에 delegate를 정의해고 선언한다.
+  - addressTableView에 들어갈 정보들(addresses)을 보낸다.
+<br>
+
+#### geocodeAddressString의 값 처리 - table로 보내기!
+
+```swift
+@IBAction func addressEntered(sender: UIButton) {
+    view.endEditing(true)
+
+    let currentTextField = locationTuples[sender.tag-1].textField
+
+    CLGeocoder().geocodeAddressString((currentTextField?.text!)!, completionHandler: {(placemarks: [CLPlacemark]?, error: Error?) -> Void in
+        if let placemarks = placemarks {
+            var addresses = [String]()
+            for placemark in placemarks {
+                addresses.append(self.formatAddressFromPlacemark(placemark: placemark))
+            }
+            self.showAddressTable(addresses: addresses)
+        } else {
+            self.showAlert(alertString: "Address not found.")
+        }
+    })
+  }
+```
+
+- completionHandler에서 placemark(검색 위치)에 리턴값이 있으면 addresses변수에 주소를 formatAddressFromPlacemark로 String 변환하여 추가 합니다.
+- showAddressTable에 주소들을 넘겨 줍니다.
+- 주소가 없을 경우 "Address not found" 알람을 띄웁니다.
+
+
+#### tableView에서 원하는 주소를 클릭했을때 event 넣기
+
+*showAddressTable에 addressTableView에서 사용될 변수를 더 설정해 줍니다.*
+
+```swift
+func showAddressTable(addresses: [String], textField: UITextField, placemarks: [CLPlacemark], sender: UIButton) {
+        let addressTableView = AddressTableView(frame: UIScreen.main.bounds, style: UITableViewStyle.plain)
+        addressTableView.addresses = addresses
+        addressTableView.currentTextField = textField
+        addressTableView.placemarkArray = placemarks
+        addressTableView.mainViewController = self
+        addressTableView.sender = sender
+        addressTableView.delegate = addressTableView
+        addressTableView.dataSource = addressTableView
+        view.addSubview(addressTableView)
+    }
+  ```
+- 주소가 들어갈 textField를 설정합니다.
+- 주소 정보가 있는 plackemakrs를 설정합니다.
+- 버튼 정보가 있는 sender를 설정합니다.
+
+
+*completionHandler에서 함수에 추가된 정보를 넣어줍니다.*
+```swift
+self.showAddressTable(addresses, textField: currentTextField,
+    placemarks: placemarks, sender: sender)
+```
+<br>  
+
+
+
+*addressTableView에 tableView:didSelectRowAtIndexPath: 함수에 event 설정을 해줍니다.*
+
+```swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if addresses.count > indexPath.row {
+            currentTextField.text = addresses[indexPath.row]
+            let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: (placemarkArray[indexPath.row].location?.coordinate)!, addressDictionary: placemarkArray[indexPath.row].addressDictionary as! [String : AnyObject]))
+
+            mainViewController.locationTuples[currentTextField.tag-1].mapItem = mapItem
+
+            sender.isSelected = true
+        }
+
+    removeFromSuperview()
+  }
+```
+
+- ```addresses.count > indexPath.row``` 선택한 셀이 주소의 갯수안에 있을때(선택될 셀의 정의)
+- mainView에서 받은 textField에 주소를 넣습니다.
+- mainViewController에 locationTuples에 해당 정보를 추가합니다.
+- button에 완료표시를 합니다.
+
+
+#### DirectionsViewController
