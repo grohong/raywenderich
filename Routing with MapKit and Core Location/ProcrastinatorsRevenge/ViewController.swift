@@ -37,6 +37,11 @@ class ViewController: UIViewController {
   let locationManager = CLLocationManager()
     
   var locationTuples: [(textField: UITextField?, mapItem: MKMapItem?)]!
+    var locationsArray: [(textField: UITextField?, mapItem: MKMapItem?)] {
+    var filtered = locationTuples.filter({$0.mapItem != nil})
+    filtered += [filtered.first!]
+    return filtered
+   }
   override func viewDidLoad() {
     super.viewDidLoad()
     locationTuples = [(sourceField, nil), (destinationField1, nil), (destinationField2, nil)]
@@ -61,6 +66,19 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: "show_directions", sender: self)
     }
     
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if locationTuples[0].mapItem == nil || (locationTuples[1].mapItem == nil && locationTuples[1].mapItem == nil) {
+            print("Please enter a valid starting point and at least one destination.")
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let directionsViewController = segue.destination as! DirectionsViewController
+        directionsViewController.locationArray = locationsArray
+    }
     
   @IBAction func addressEntered(sender: UIButton) {
     view.endEditing(true)
@@ -81,7 +99,9 @@ class ViewController: UIViewController {
   }
 
   @IBAction func swapFields(sender: AnyObject) {
-    
+    swap(&destinationField1.text, &destinationField2.text)
+    swap(&locationTuples[1].mapItem, &locationTuples[2].mapItem)
+    swap(&self.enterButtonArray.filter{$0.tag == 2}.first!.isSelected, &self.enterButtonArray.filter{$0.tag == 3}.first!.isSelected)
   }
     
     func formatAddressFromPlacemark(placemark: CLPlacemark) -> String {
@@ -137,8 +157,11 @@ class ViewController: UIViewController {
 
 extension ViewController: UITextFieldDelegate {
     
-  func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-    return true
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        enterButtonArray.filter{$0.tag == textField.tag}.first!.isSelected = false
+        locationTuples[textField.tag-1].mapItem = nil
+    
+        return true
   }
   
   func textFieldDidBeginEditing(textField: UITextField) {
