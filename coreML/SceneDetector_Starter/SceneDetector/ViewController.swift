@@ -29,6 +29,8 @@
  */
 
 import UIKit
+import CoreML
+import Vision
 
 class ViewController: UIViewController {
 
@@ -67,7 +69,9 @@ extension ViewController: UIImagePickerControllerDelegate {
 
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     dismiss(animated: true)
-
+    
+    print(info)
+    
     guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
       fatalError("couldn't load image from Photos")
     }
