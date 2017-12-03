@@ -71,6 +71,7 @@ class Trie {
 
 이것은 당신의 Trie의 기초를 설정합니다. Trie의 루트 node에 대한 참조를 유지하는 루트 속성을 선언합니다. 영어에 대한 Trie를 구현하고 있으므로 Character 유형의 node를 사용하게 됩니다. init 메소드는 빈 TrieNode로 루트 속성을 간단히 초기화 합니다.
 
+
 ### Typealiasing
 
 Trie tree를 더 하기전에 ```Trie``` 클래스를 아래와 같이 업데이트 해주세요.
@@ -169,3 +170,75 @@ var isTerminating = false
 "cute"의 마지막 문자에 표시을 해줍니다, 이 표시는는 문자가 끝났다는 의미입니다. 만약 "cut"을 ```Trie```에 삽입한다면 이것은 "t"에 끝났다는 표시를 할 것입니다.
 
 ![trie_terminating_cut](/images/trie_terminating_cut.png)
+
+
+## Challenge
+
+메소드가 끝나면 마지막 노드를 종단 노드로 표시하는로직을 구현하십시오.
+
+```Swift
+if currentIndex == characters.count-1 {
+  currentNode.isTerminating = true
+}
+```
+
+문자열이 마지막이라는 소리는 단어의 끝이기 때문에 이때 ```isTerminating```을 true로 바꿔주면 됩니다.
+
+
+
+### Contains
+
+삽입 메소드가 끝났으면 ```contains```메소드를 다룰겁니다. 이 메소드는 단어가 존재하는지 체크합니다. 아래와 같이 작성해 주세요.
+
+```Swift
+func contains(word: String) -> Bool {
+  guard !word.isEmpty else { return false }
+  var currentNode = root
+
+  let characters = Array(word.lowercased().characters)
+  var currentIndex = 0
+
+  // more to come ...
+}
+```
+
+일단은 단어를 문자열 배열로 바꾼디 비교할 준비를 하였습니다. 그 다음 문자열을 구분하는 코드를 추가하겠습니다.
+
+ ```Swift
+//1
+while currentIndex < characters.count, let child = currentNode.childen[characters[currentIndex]] {
+//2
+currentIndex += 1
+currentNode = child  
+}
+ ```
+
+ 1. 문자열의 마지막 문자가 아니고, 현재 인덱스의 문자열이 현재 노드의 자식에 있을경우 계속 반복합니다.
+ 2. 인덱스를 1높이고 해당 노드에서 반복합니다.
+
+ 문자열 반복이 처리됩니다. 이제 반복이 끝났을 때 문자가 ```Trie```클래스 안에 있었는지 확인해야 합니다. 아래와 같이 작성해 주세요.
+
+ ```Swift
+if currentIndex == characters.count && isTerminating {
+  return true
+} else {
+  return false
+}
+ ```
+
+마지막 반복이 끝났을때 문자열의 길이가 맞는지, 그리고 마지막 문자였는지를 확인하여 문자가 ```Trie```안에 있는지를 화인할수 있습니다. 이제 한번 확인해 보겠습니다.
+
+
+### Try it Out!
+```Trie``` 안에 문자를 넣고 한번 확인해 보겠습니다.
+
+```Swift
+let trie = Trie()
+
+trie.insert(word: "cute")
+trie.contains(word: "cute") // true
+
+trie.contains(word: "cut") // false
+trie.insert(word: "cut")
+trie.contains(word: "cut") // true
+```
