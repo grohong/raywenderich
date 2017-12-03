@@ -47,7 +47,41 @@ extension Trie {
                 currentNode = currentNode.children[character]!
             }
             
+            if currentIndex == characters.count-1 {
+                currentNode.isTerminating = true
+            }
+            
             currentIndex += 1
         }
     }
+    
+    func contains(word: String) -> Bool {
+        guard !word.isEmpty else { return false }
+        var currentNode = root
+        
+        let characters = Array(word.lowercased().characters)
+        var currentIndex = 0
+        
+        while currentIndex < characters.count, let child = currentNode.children[characters[currentIndex]] {
+            currentIndex += 1
+            currentNode = child
+        }
+        
+        if currentIndex == characters.count && currentNode.isTerminating {
+            return true
+        } else {
+            return false
+        }
+    }
 }
+
+
+
+let trie = Trie()
+
+trie.insert(word: "cute")
+trie.contains(word: "cute")
+
+trie.contains(word: "cut")
+trie.insert(word: "cut")
+trie.contains(word: "cut")
