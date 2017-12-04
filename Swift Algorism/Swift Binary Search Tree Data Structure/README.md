@@ -4,14 +4,14 @@
 
 binary tree 자체는 범용 tree에서 발전했습니다. 이것이 무엇인지 모르는 경우, [Swift Tree Data Structure](https://grohong.github.io/raywenderlich/2017/12/03/raywenderlick-SwiftAlgorismTreeDataStructure.html)에서 확인해 보세요.
 
-binary tree는 각 노드가 0, 1 또는 2개의 하위 노드를 갖는 트리입니다. 중요한 점은 2가 최대 값이라는 것입니다. 그래서 binary라는 이름을 가지게 됩니다. 아래에서 모습을 확인해 보겠습니다.
+binary tree는 각 node가 0, 1 또는 2개의 하위 node를 갖는 tree입니다. 중요한 점은 2가 최대 값이라는 것입니다. 그래서 binary라는 이름을 가지게 됩니다. 아래에서 모습을 확인해 보겠습니다.
 
 ![binary_exam](/images/binary_exam.png)
 
 
 ## Binary Tree Implementation in Swift
 
-다른 트리와 마찬가지로, binary tree도 노드로 구성되어 있습니다. 노드를 표현하는 방법중 하나는 노드 클래스를 만드는 것입니다.(아래는 그 예중 하나입니다.)
+다른 tree와 마찬가지로, binary tree도 node로 구성되어 있습니다. node를 표현하는 방법중 하나는 node 클래스를 만드는 것입니다.(아래는 그 예중 하나입니다.)
 
 ```Swift
 class Node<T> {
@@ -24,28 +24,28 @@ class Node<T> {
   }
 }
 ```
-binary tree에서, 모든 노드는 ```value```값을 갔습니다. 또 ```leftChild```및 ```rightChild```로 구성된 왼쪽, 오른쪽 자식도 갔습니다. 구현할때는 자식이 ```nil```값이 올수도 있기때문에 옵셔널로 구현했습니다.
+binary tree에서, 모든 node는 ```value```값을 갔습니다. 또 ```leftChild```및 ```rightChild```로 구성된 왼쪽, 오른쪽 자식도 갔습니다. 구현할때는 자식이 ```nil```값이 올수도 있기때문에 옵셔널로 구현했습니다.
 
-이것은 전통적인 트리 구성방법입니다. 하지만 오늘은 좀 새로운 방법을 써보겠습니다.
+이것은 전통적인 tree 구성방법입니다. 하지만 오늘은 좀 새로운 방법을 써보겠습니다.
 
 
 ### Value Semantics
 
 Swift의 핵심 아이디어 중 하나는 적절한 경우 참조 유형(class) 대신 값 유형(struct 및 enum)을 사용하는 것입니다. binary tree를 만드는 것은 값 유형을 사용하는 완벽한 경우입니다. 이번 기회에 enum을 자습하는 기회를 가질 수 있습니다.
 
-아래와 같이 ```enum```으로 구현된 이진트리를 추가해 주세요.
+아래와 같이 ```enum```으로 구현된 binarytree를 추가해 주세요.
 
 ```Swift
 enum BinaryTree<T> {
 
 }
 ```
-값이 무엇이 올지 모르게 때문에 제네릭 형태로 이진트리를 구현했습니다.
+값이 무엇이 올지 모르게 때문에 제네릭 형태로 binarytree를 구현했습니다.
 
 
 ### States
 
-enum형은 하나의 상태로만 존재할 수 있다는 점에서 엄격합니다. 다행히도, 이것은 binary tree 의 아이디어에 적합 합니다. binary tree는 비어있는 노드의 유한 집합이거나 노드의 값과 왼쪽 및 오른쪽 자식에 대한 참조로 구성됩니다.
+enum형은 하나의 상태로만 존재할 수 있다는 점에서 엄격합니다. 다행히도, 이것은 binary tree 의 아이디어에 적합 합니다. binary tree는 비어있는 node의 유한 집합이거나 node의 값과 왼쪽 및 오른쪽 자식에 대한 참조로 구성됩니다.
 
 아래와 같이 코드를 업데이트 해주세요.
 
@@ -129,7 +129,7 @@ leaf에서 역으로 코드를 완성시켜야 합니다.
 
 ### CustomStringConvertible
 
-콘솔 로킹 없이는 트리의 구조를 확인하기 힘들 수 있습니다. Swift의 CustomStringConvertible를 사용한다면 binary tree를 손쉽게 콘솔에 출력해 볼수 있습니다. 아래와 같이 코드를 업데이트 해주세요.
+콘솔 로킹 없이는 tree의 구조를 확인하기 힘들 수 있습니다. Swift의 CustomStringConvertible를 사용한다면 binary tree를 손쉽게 콘솔에 출력해 볼수 있습니다. 아래와 같이 코드를 업데이트 해주세요.
 
 ```Swift
 extension BinaryTree: CustomStringConvertible {
@@ -164,7 +164,7 @@ value: +,
 
 ### Getting The Count
 
-또 다른 유용한 기능은 트리에서 노드 수를 얻을 수 있다는 것입니다. 다음과 같은 코드를 추가해 주세요.
+또 다른 유용한 기능은 tree에서 node 수를 얻을 수 있다는 것입니다. 다음과 같은 코드를 추가해 주세요.
 
 ```Swift
 var count: Int {
@@ -181,14 +181,14 @@ var count: Int {
 ```Swift
 tree.count //12
 ```
-트리에 노드가 12 개 있기 때문에 사이드 바에 숫자 12가 표시되어야 합니다.
+tree에 node가 12 개 있기 때문에 사이드 바에 숫자 12가 표시되어야 합니다.
 
 아래에선 가장 많이 사용되고 있는 **Binary Search Tree** 에 대해 알아보겠습니다.
 
 
 ## Binary Search Trees
 
-Binary Search Tree는 트리가 항상 정렬되도록 삽입 및 삭제를 수행하는 특별한 종류의 이진 트리(각 노드에 두 개의 자식이있는 트리)입니다.
+Binary Search Tree는 tree가 항상 정렬되도록 삽입 및 삭제를 수행하는 특별한 종류의 binary tree(각 node에 두 개의 자식이있는 tree)입니다.
 
 
 ### “Always Sorted” Property
@@ -197,18 +197,18 @@ Binary Search Tree는 트리가 항상 정렬되도록 삽입 및 삭제를 수�
 
 ![binary_search_tree](/images/binary_search_tree.png)
 
-각 왼쪽 자식 노드가 부모 노드보다 작고 각 오른쪽 자식 노드가 부모 노드보다 큰지 확인하십시오. binary search tree의 핵심 기능입니다.
+각 왼쪽 자식 node가 부모 node보다 작고 각 오른쪽 자식 node가 부모 node보다 큰지 확인하십시오. binary search tree의 핵심 기능입니다.
 
 
 ### Insertion
 
-삽입을 실행할때, 시작노드가 root에서부터 시작해야 됩니다.
+삽입을 실행할때, 시작node가 root에서부터 시작해야 됩니다.
 
-- *만약 현재 노드가 비어있을때*, 새로운 노드를 삽입해야 합니다.
+- *만약 현재 node가 비어있을때*, 새로운 node를 삽입해야 합니다.
 - *만약 새로운 값이 더 작을때*, 왼쪽 가지로 이동해야 합니다.
 - *만약 새로운 값이 더 클때*, 오른쪽 가지로 이동해야 합니다.
 
-새 값을 삽입 할 수 있는 빈 자리를 찾을 때까지 나무를 따라 길을 가로 지릅니다. 예를 들어 위의 트리에 값 9를 삽입한다고 가정 해보십시오.
+새 값을 삽입 할 수 있는 빈 자리를 찾을 때까지 나무를 따라 길을 가로 지릅니다. 예를 들어 위의 tree에 값 9를 삽입한다고 가정 해보십시오.
 
 1. tree의 root부터 시작합니다.(이번에는 7부터 시작), 그 후에 9랑 비교합니다.
 2. 9>7, 그러면 오른쪽 가지로 이동합니다.
@@ -229,7 +229,7 @@ Binary Search Tree는 트리가 항상 정렬되도록 삽입 및 삭제를 수�
 
 ![binary_search_exam2](/images/binary_search_exam2.png)
 
-새 요소를 tree에 삽입 할 수 있는 위치는 항상 단 한 곳입니다. 이 장소를 찾는 것은 O(h)정도로 쾌 빠릅니다.(h는 트리의 높이입니다.)
+새 요소를 tree에 삽입 할 수 있는 위치는 항상 단 한 곳입니다. 이 장소를 찾는 것은 O(h)정도로 쾌 빠릅니다.(h는 tree의 높이입니다.)
 
 
 ## Challenge: Implementing Insertion
@@ -251,7 +251,7 @@ mutating func naiveInsert(newValue: T) {
 ```
 
 1. 값 유형은 기본적으로 불변입니다. 값 유형내에서 무언가를 변경하려고하는 메소드를 작성하는 경우, 메소드 앞에 ```mutating``` 키워드를 추가하여 명시적으로 정해야합니다.
-2. 현재 node의 왼쪽 자식과 현재 값 및 오른쪽 자식을 ```guard```을 사용하여 표시합니다. 이 노드가 비어있으면 가드가 실패햐여 블록이 됩니다.
+2. 현재 node의 왼쪽 자식과 현재 값 및 오른쪽 자식을 ```guard```을 사용하여 표시합니다. 이 node가 비어있으면 가드가 실패햐여 블록이 됩니다.
 3. 블록에서는, ```self``` 는 ```empty```로 정의 되고 새로운 값이 들어갑니다.
 4. 더 추가할 부분입니다.
 
@@ -263,7 +263,7 @@ Comparable 프로토콜은 ```<```연산자와 같은 비교 연산자를 사용
 
 이제, 위의 알고리즘을 기반으로 섹션 4를 구현해보십시오.
 
-- *만약 현재 노드가 비어있으면*, 새로운 노드를 여기에 삽입하세요.
+- *만약 현재 node가 비어있으면*, 새로운 node를 여기에 삽입하세요.
 - *만약 새로운 값이 더 작으면*, 왼쪽 가지로 이동하세요.
 - *만약 새로운 값이 더 크다면*, 오른쪽 가지로 이동하세요.
 
@@ -351,7 +351,7 @@ value: 5,
 
 ## Traversal Algorithms
 
-순회 알고리즘은 tree 관련 작업의 기본입니다. 순회 알고리즘은 트리의 모든 node를 통과합니다. binary tree를 순회하는 세가지 주요 방법이 있습니다.
+순회 알고리즘은 tree 관련 작업의 기본입니다. 순회 알고리즘은 tree의 모든 node를 통과합니다. binary tree를 순회하는 세가지 주요 방법이 있습니다.
 
 
 ### In-order Traversal
@@ -380,8 +380,8 @@ func traverseInOrder(process: @noescape (T) -> ()) {
 }
 ```
 
-1. 만약 현재 노드가 비어있다면, 아래로 갈 방법이 없기 때문에 return 한다.
-2. 만약 현재 노드가 비어있지 않다면, 더 내려갈 수 있다. 왼쪽 노드를 방문하고, 자신을 방문하고, 오른쪽 노드를 방문합니다.
+1. 만약 현재 node가 비어있다면, 아래로 갈 방법이 없기 때문에 return 한다.
+2. 만약 현재 node가 비어있지 않다면, 더 내려갈 수 있다. 왼쪽 node를 방문하고, 자신을 방문하고, 오른쪽 node를 방문합니다.
 
 아래와 같은 테스트 케이스르 작성하고 확인해 볼수 있습니다.
 
@@ -411,7 +411,7 @@ tree.traverseInOrder { print($0) }
 
 ### Pre-order Traversal
 
-Pre-order traversal는 binary search tree의 현재 노드를 처음 방문하는 동안 노드를 통과하는 것입니다. 여기서 핵심은 자식을 지나가기 전에 과정을 호출하는 것입니다. BinaryTree 안에 다음과 같은 코드를 작성해 주세요.
+Pre-order traversal는 binary search tree의 현재 node를 처음 방문하는 동안 node를 통과하는 것입니다. 여기서 핵심은 자식을 지나가기 전에 과정을 호출하는 것입니다. BinaryTree 안에 다음과 같은 코드를 작성해 주세요.
 
 ```Swift
 func traversePreOrder(process: @noescape (T) -> ()) {
@@ -447,7 +447,7 @@ func traversePostOrder( process: @noescape (T) -> ()) {
 
 ## Searching
 
-binary search tree는 효육적인 검색을 용이하게 합니다. binary search tree는 부모 노드보다 하위에 남아있는 모든 자식 노드가 있고 모든 부모 노드는 부모 노드와 같거나 큰 자식 노드입니다. 이러한 특징을 이용하여 트래 내에 값이 존재하는지 확인하기 위해 왼쪽 하위 경로 또는 오른쪽 하위 경로를 결정할수 있습니다. 다음과 같은 코드를 작성하세요.
+binary search tree는 효육적인 검색을 용이하게 합니다. binary search tree는 부모 node보다 하위에 남아있는 모든 자식 node가 있고 모든 부모 node는 부모 node와 같거나 큰 자식 node입니다. 이러한 특징을 이용하여 트래 내에 값이 존재하는지 확인하기 위해 왼쪽 하위 경로 또는 오른쪽 하위 경로를 결정할수 있습니다. 다음과 같은 코드를 작성하세요.
 
 ```Swift
 func search(searchValue: T) -> BinaryTree? {
@@ -470,5 +470,5 @@ func search(searchValue: T) -> BinaryTree? {
 }
 ```
 
-1. 만약 찾는 값과 노드의 값이 같다면, 자기 사진을 반환합니다.
+1. 만약 찾는 값과 node의 값이 같다면, 자기 사진을 반환합니다.
 2. 찾는 값이 자신의 값보다 작을 경우 자신의 왼쪽 자식으로 재귀하고, 클경우 오른쪽 자식으로 재귀합니다.
