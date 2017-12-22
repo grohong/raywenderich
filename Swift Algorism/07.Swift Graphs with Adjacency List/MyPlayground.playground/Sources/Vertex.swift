@@ -13,3 +13,9 @@ extension Vertex: Hashable {
         return lhs.data == rhs.data
     }
 }
+
+extension Vertex: CustomStringConvertible {
+    public var description: String {
+        return "\(data)"
+    }
+}

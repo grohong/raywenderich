@@ -94,3 +94,272 @@ extension Vertex: Hashable {
 1. **Hashable** 를 수행하기 위해서는 **hashValue** 값을 가지고 있어야 합니다.
 
 2. **Hashable** 은 **Equatable** 을 상속합니다. equal-to 연산자를 추가해야 합니다.
+
+
+```Swift
+extension Vertex: CustomStringConvertible {
+  public var description: String {
+    return "\(data)"
+  }
+}
+```
+
+**CustomStringConvertible** 프로토콜은 data를 출력할때 도움을 주는 프로토콜입니다.
+
+
+### Edges
+
+![graph_edges](/images/graph_edges.png)
+
+Source 그룹에 Edge.swift라는 클래스를 하나 추가해 주세요.
+
+**Edge.swift** 는 Enum으로 정의된 클래스 입니다.
+
+```Swift
+public enum EdgeType {
+case  directed, undirected
+}
+```
+
+이 enum type의 목표는 방향 그래프인지 무방향 그래프인지를 구별하기 위해 저의해 둡니다.
+
+```Swift
+public struct Edge<T: Hashable> {
+    public var source: Vertex<T> // 1
+    public var destination: Vertex<T>
+    public let weight: Double? // 2
+}
+```
+
+1. 모서리를 구현하는 방법은 여러가지 있습니다. 이 모서리는, 두가지의 꼭지점을 포함하고 있습니다, **source** 와 **destination** 입니다. 그 이유는 그래프가 방향성을 가질 수 있기 때문입니다. 두 개의 정점은 양뱡향으므로 한 쌍점의 정점 사이에 두 개의 가장자리가 필요합니다.
+
+2. 모서리는 어느정도의 가중치를 가질수 있습니다.
+
+```Swift
+extension Edge: Hashable {
+
+  public var hashValue: Int {
+    return "\(source)\(destination)\(weight)".hashValue
+  }
+
+  static public func ==(lhs: Edge<T>, rhs: Edge<T>) -> Bool {
+    return lhs.source == rhs.source &&
+      lhs.destination == rhs.destination &&
+      lhs.weight == rhs.weight
+  }
+}
+```
+
+**Edge** 또한 **Vertex** 와 비슷하게 **hashable** 프로토콜을 수행해야됩니다.
+
+
+### Graphable Protocol
+
+이제 **vertex** 와 **edge** 를 정의했습니다. 이제 한가지더 할게 남았습니다. graph에 대한 interface를 작성하는 것입니다.
+
+이를 위해 Sources 그룹에 **Graphable.swift** 코드를 작성하겠습니다.
+
+```Swift
+protocol Graphable {
+    associatedtype Element: Hashable // 1
+    var description: CustomStringConvertible { get } // 2
+
+    func createVertex(data: Element) -> Vertex<Element> // 3
+    func add(_ type: EdgeType, from source: Vertex<Element>, to destination: Vertex<Element>, weight: Double?) // 4
+    func weight(from source: Vertex<Element>, to destination: Vertex<Element>) -> Double? // 5
+    func edge(from source: Vertex<Element>) -> [Edge<Element>]? // 6
+}
+```
+
+1. 프로토콜에서는 associatedtype의 Element를 요구합니다. associatedtype은 프로토콜에서 제네릭 타입이 요구될때 사용합니다.
+
+2. description 속성은 그래프를 출력할때 사용됩니다. 이것은 debugging 할때도 유용합니다.
+
+3. **createVertex(data:)** 는 꼭지점을 만들때 사용됩니다.
+
+4. **add(_:from:to:weight:)** 는 두개의 꼭지점에 모서리를 추가할때 사용됩니다. 이때 무방향 모서리인지 방향 모서리인지와 비중을 결정할 수 있습니다.
+
+5. **weight(from:to:)** 는 두개의 꼭지점 사이의 모서리에 비중을 줄수 있습니다.
+
+6. **edge(from:)** 꼭지점에 연결된 모든 모서리를 받을 수 있습니다.
+
+
+### Adjacency List
+
+Sources 그룹아래 **AdjacencyList.swift** 라는 파일을 만들어 둡니다.
+
+```Swift
+open class AdjacencyList<T: Hashable> {
+  public var adjacencyDict : [Vertex<T>: [Edge<T>]] = [:]
+  public init() {}
+}
+```
+
+**adjacencyDict** 은 그래프의 저장소로 쓸수 있습니다. **adjacencyDict** 은 딕셔너리 값입니다. 키는 **꼭지점** 이고 값은 **모서리** 입니다.
+
+```Swift
+extension adjacencyList: Graphable {
+  public typealias Element = T
+}
+```
+
+**AdjacencyList** 또한 제네릭 값입니다. **associatedtype** 값이 **T** 로 지정되었습니다.
+
+
+## Creating Vertices
+
+ 꼭지점을 만들기 위해 아래와 같이 **extension** 에 코드를 작성해주세요.
+
+ ```Swift
+ public func createVertex(data: Element) -> Vertex<Element> {
+   let vertex = Vertex(data: data)
+
+   if adjacencyDict[vertex]  == nil {
+     adjacencyList[vertex] == []
+   }
+
+   return vertex
+ }
+ ```
+
+전달된 데이터로 **꼭지점** 을 만듭니다. 일단 꼭지점이 존재하는지 확인하고, 존재하지 않으면 배열을 초기화 하고 반환합니다.
+
+
+## Creating Edges
+
+그래프가 방향성 그래프 인지 무방향성 인지 확인합니다.
+
+![graph_creatingEdges](/images/graph_creatingEdges.png)
+
+**init():** 아래 다음과 같은 코드를 작성해 주세요.
+
+```Swift
+fileprivate func addDirectedEdge(from source: Vertex<Element>, to destination: Vertex<Element>, weight: Double?) {
+  let edge = Edge(source: source, destination: destination, weight: weight) // 1
+  adjacencyDict[source]?.append(edge) // 2
+}
+```
+
+1. 모서리를 생서합니다.
+
+2. **source** 꼭지점에 모서리를 추가합니다.
+
+```Swift
+fileprivate func addUndirectedEdge(vertices: (Vertex<Element>, Vertex<Element>), weight: Double?) {
+  let (source, destination) = vertices
+  addDirectedEdge(from: source, to: destination, weight: weight)
+  addDirectedEdge(from: destination, to: source, weight: weight)
+}
+```
+
+무방향 그래프일때, 방향 그래프가 양쪽에 추가되는걸로 다룰 수 있습니다. **addDirectedEdge(from:to:weight:)** 를 두번 불러 이를 구현할수 있습니다.
+
+이제 **AdjacencyList** 에 **createVertex(data:)** 를 구현할수 있습니다.
+
+**add(_:from:to:weight)** 에서 방향인지 무방향인지 구분하고 이에 따로 모서리를 추가합니다.
+
+
+### Retrieving information
+
+이제 비중을 가져오는 방법을 제공하여 **Graphable** 을 마무리 지어보겠습니다.
+
+![graph_retrieving](/images/graph_retrieving.png)
+
+Singapore 에서 Hong Kong으로 가는 비행기는 얼마입니까?
+
+다음과 같은 코드를 만들어 계산해 보겠습니다.
+
+```Swift
+public func weight(from source: Vertex<Element>, to destination: Vertex<Element>) -> Double? {
+  guard let edges = adjacencyDict[source] else { // 1
+    return nil
+  }
+
+  for edge in edges { // 2
+    if edge.destination == destination { // 3
+      return edge.weight
+    }
+  }
+
+  return nil // 4
+}
+```
+
+1. **source** 의 모서리를 모두 가지고 옵니다. 없을경우 **nil** 값을 반환합니다.
+
+2. 모든 모서리를 루프를 돌립니다.
+
+3. 모서리의 도착지가 찾는 도착지인지 확인합니다.
+
+4. 없을 겨우 **nil** 값을 반환합니다.
+
+```Swift
+public func edges(from source: Vertex<Element>) -> [Edge<Element>]? {
+  return adjacencyDict[source]
+}
+```
+
+**edges(from:)** 는 간단합니다. 지정된 꼭지점을 기반으로 사전에 액세스 하고 모서리 배열을 반환합니다.
+
+퍼즐의 마지막 부분은 인접 목록을 시각화하는 것입니다. **Graphable** 프로토콜을 수행하기 위한 최종 메소드를 작성해야합니다.
+
+
+## Visualizing the adjacency list
+
+```Swift
+public var description: CustomStringConvertible {
+  var result = ""
+  for (vertex, edges) in adjacencyDict {
+    var edgeString = ""
+    for (index, edge) in edges.enumerated() {
+      if index != edges.count - 1 {
+        edgeString.append("\(edge.destination), ")
+      } else {
+        edgeString.append("\(edge.destination)")
+      }
+    }
+    result.append("\(vertex) ---> [ \(edgeString) ] \n ")
+  }
+  return result
+}
+```
+
+**description** 속성은 모든 dictionary 값을 지나면서 인쇄합니다.
+
+
+## Testing out the Adjacency List
+
+![graph_weight](/images/graph_weight.png)
+
+다음 그래프를 작성해 보겠습니다.
+
+```Swift
+import UIKit
+import XCPlayground
+
+let adjacencyList = AdjacencyList<String>()
+
+let singapore = adjacencyList.createVertex(data: "Singapore")
+let tokyo = adjacencyList.createVertex(data: "Tokyo")
+let hongKong = adjacencyList.createVertex(data: "Hong Kong")
+let detroit = adjacencyList.createVertex(data: "Detroit")
+let sanFrancisco = adjacencyList.createVertex(data: "San Francisco")
+let washingtonDC = adjacencyList.createVertex(data: "Washington DC")
+let austinTexas = adjacencyList.createVertex(data: "Austin Texas")
+let seattle = adjacencyList.createVertex(data: "Seattle")
+
+adjacencyList.add(.undirected, from: singapore, to: hongKong, weight: 300)
+adjacencyList.add(.undirected, from: singapore, to: tokyo, weight: 500)
+adjacencyList.add(.undirected, from: hongKong, to: tokyo, weight: 250)
+adjacencyList.add(.undirected, from: tokyo, to: detroit, weight: 450)
+adjacencyList.add(.undirected, from: tokyo, to: washingtonDC, weight: 300)
+adjacencyList.add(.undirected, from: hongKong, to: sanFrancisco, weight: 600)
+adjacencyList.add(.undirected, from: detroit, to: austinTexas, weight: 50)
+adjacencyList.add(.undirected, from: austinTexas, to: washingtonDC, weight: 292)
+adjacencyList.add(.undirected, from: sanFrancisco, to: washingtonDC, weight: 337)
+adjacencyList.add(.undirected, from: washingtonDC, to: seattle, weight: 277)
+adjacencyList.add(.undirected, from: sanFrancisco, to: seattle, weight: 218)
+adjacencyList.add(.undirected, from: austinTexas, to: sanFrancisco, weight: 297)
+
+adjacencyList.description
+```
