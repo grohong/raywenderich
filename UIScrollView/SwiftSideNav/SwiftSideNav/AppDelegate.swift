@@ -63,14 +63,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: IconTableViewControllerDelegate {
   func iconTableViewControllerDidTapMenuButton(_ controller: IconTableViewController) {
-    
+    sidebarVC.toggleLeftAnimated(true)
   }
 }
 
 extension AppDelegate: MenuTableViewControllerDelegate {
   func menuTableViewController(_ controller: MenuTableViewController, didSelectRow row: Int) {
     
-
+    sidebarVC.closeMenuAnimated(true)
     let destinationViewController = iconViewControllers[row]
     if iconsNav.topViewController != destinationViewController {
       iconsNav.setViewControllers([destinationViewController], animated: true)

@@ -45,6 +45,32 @@ class SidebarViewController: UIViewController {
     setupScrollView()
     setupViewControllers()
   }
+    
+    override func viewDidLayoutSubviews() {
+        if isFirstResponder {
+            closeMenuAnimated(false)
+        }
+    }
+    
+    func closeMenuAnimated(_ animated: Bool) {
+        scrollView.setContentOffset(CGPoint(x: leftViewController.view.frame.width, y: 0), animated: animated)
+    }
+    
+    func leftMenuIsOpen() -> Bool {
+        return scrollView.contentOffset.x == 0
+    }
+    
+    func openLeftMenuAnimated(_ animated: Bool) {
+        scrollView.setContentOffset(CGPoint(x:0, y:0), animated: animated)
+    }
+    
+    func toggleLeftAnimated(_ animated: Bool) {
+        if leftMenuIsOpen() {
+            closeMenuAnimated(animated)
+        } else {
+            openLeftMenuAnimated(animated)
+        }
+    }
 
   func setupScrollView() {
     scrollView = UIScrollView()
@@ -61,6 +87,7 @@ class SidebarViewController: UIViewController {
   func setupViewControllers() {
     addViewController(leftViewController)
     addViewController(mainViewController)
+    addShadowToView(mainViewController.view)
     let views: [String: UIView] = ["left": leftViewController.view, "main": mainViewController.view, "outer": view]
     let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "|[left][main(==outer)]|", options: [.alignAllTop, .alignAllBottom], metrics: nil, views: views)
     let leftWidthConstraint = NSLayoutConstraint(item: leftViewController.view, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1.0, constant: -overlap)
@@ -75,7 +102,13 @@ class SidebarViewController: UIViewController {
     viewController.didMove(toParentViewController: self)
   }
   
-  
+    private func addShadowToView(_ destView: UIView) {
+        destView.layer.shadowPath = UIBezierPath(rect: destView.bounds).cgPath
+        destView.layer.shadowRadius = 2.5
+        destView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        destView.layer.shadowOpacity = 1.0
+        destView.layer.shadowColor = UIColor.black.cgColor
+    }
   
   
   

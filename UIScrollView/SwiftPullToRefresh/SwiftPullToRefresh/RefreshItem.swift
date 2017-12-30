@@ -22,15 +22,6 @@
 
 import UIKit
 
-protocol MenuTableViewControllerDelegate: class {
-  func menuTableViewController(_ controller: MenuTableViewController, didSelectRow row: Int)
-}
+class RefreshItem {
 
-class MenuTableViewController: UITableViewController {
-  weak var delegate: MenuTableViewControllerDelegate?
-
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-    delegate?.menuTableViewController(self, didSelectRow: indexPath.row)
-  }
 }
