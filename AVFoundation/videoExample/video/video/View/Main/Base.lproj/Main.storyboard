@@ -72,6 +72,7 @@
                                             <outlet property="userImage" destination="mU3-Lb-cjx" id="VDv-0e-0rV"/>
                                             <outlet property="videoThumbnailImage" destination="TZf-G1-xuf" id="Vh6-mT-4in"/>
                                             <outlet property="videoTitleLabel" destination="KZd-Ck-dqC" id="Ivk-6B-AoB"/>
+                                            <segue destination="FTK-HY-PBL" kind="showDetail" identifier="MainSegue" id="sRp-Hy-9Wh"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -102,6 +103,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="37.600000000000001" y="133.5832083958021"/>
+        </scene>
+        <!--VideoPlayer-->
+        <scene sceneID="BSM-na-wog">
+            <objects>
+                <viewControllerPlaceholder storyboardName="VideoPlayer" id="FTK-HY-PBL" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eHj-5F-KbE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1020" y="133"/>
         </scene>
     </scenes>
 </document>

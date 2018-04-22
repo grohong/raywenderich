@@ -51,8 +51,6 @@ class ViewController: UIViewController {
         
         var time = asset.duration
         time.value = min(time.value, 2)
-//        let time = CMTimeMakeWithSeconds(Float64(1), 100)
-        print(time)
         
         do {
             let imageRef = try imageGenerator.copyCGImage(at: time, actualTime: nil)
@@ -60,6 +58,17 @@ class ViewController: UIViewController {
         } catch {
             print(error)
             return nil
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "MainSegue" {
+            if let indexPath = videoListCollectionView.indexPathsForSelectedItems {
+                let videoURL = videoURLs[indexPath[0].row]
+                if let videoPlayer = segue.destination as? VideoPlayer {
+                    videoPlayer.videoURL = videoURL
+                }
+            }
         }
     }
     
